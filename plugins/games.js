@@ -39,7 +39,7 @@ class Game {
 	}
 
 	signups() {
-		this.say("Hosting a game of " + this.name + "! " + (this.freeJoin ? " (free join)" : "If you would like to play, use the command ``" + Config.commandCharacter + "joingame``."));
+		this.say("Hosting a game of " + this.name + "! " + (this.freeJoin ? " (free join)" : "If you would like to play, use the command ``" + Config.commandCharacter + "join``."));
 		if (this.description) this.say("Description: " + this.description);
 		if (typeof this.onSignups === 'function') this.onSignups();
 		if (this.freeJoin) this.started = true;
@@ -105,6 +105,10 @@ class Game {
 
 	join(user) {
 		if (user.id in this.players || this.started) return;
+		if (this.freeJoin) {
+			user.say("This game does not require you to join!");
+			return;
+		}
 		this.addPlayer(user);
 		user.say('You have joined the game of ' + this.name + '!');
 		if (typeof this.onJoin === 'function') this.onJoin(user);
@@ -115,6 +119,14 @@ class Game {
 		this.removePlayer(user);
 		user.say("You have left the game of " + this.name + "!");
 		if (typeof this.onLeave === 'function') this.onLeave(user);
+	}
+
+	pl() {
+		let players = [];
+		for (let userID in this.players) {
+			players.push(this.players[userID].name);
+		}
+		this.room.say("**Players (" + this.playerCount + ")**: " + players.join(", "));
 	}
 }
 
@@ -147,37 +159,100 @@ class Plugin {
 		let id = Tools.toId(game);
 		if (!(id in this.games)) return room.say("The game '" + game.trim() + "' was not found.");
 		room.game = new this.games[id].game(room); // eslint-disable-line new-cap
+		room.game.signups();
 	}
 }
 
 let Games = new Plugin();
 
 let commands = {
-	gamesignups: 'creategame',
-	creategame: function (target, room, user) {
-		if (!user.hasRank(room, '+')) return;
+	gamesignups: 'signups',
+	signups: function (target, room, user) {
+		if (!user.isDeveloper() && !user.hasRank(room, '+')) return;
 		Games.createGame(target, room);
-		room.game.signups();
 	},
-	startgame: function (target, room, user) {
-		if (!room.game || !user.hasRank(room, '+')) return;
-		room.game.start();
+	startgame: 'start',
+	start: function (target, room, user) {
+		if ((!user.isDeveloper() && !user.hasRank(room, '+')) || !room.game) return;
+		if (typeof room.game.start === 'function') room.game.start();
 	},
-	endgame: function (target, room, user) {
-		if (!room.game || !user.hasRank(room, '+')) return;
+	endgame: 'end',
+	end: function (target, room, user) {
+		if ((!user.isDeveloper() && !user.hasRank(room, '+')) || !room.game) return;
 		room.game.forceEnd();
 	},
-	guess: function (target, room, user) {
+
+	players: 'pl',
+	pl: function (target, room, user) {
+		if ((!user.isDeveloper() && !user.hasRank(room, '+')) || !room.game) return;
+		if (typeof room.game.pl === 'function') room.game.pl();
+	},
+
+	guess: 'g',
+	g: function (target, room, user) {
 		if (!room.game) return;
 		if (typeof room.game.guess === 'function') room.game.guess(target, user);
 	},
-	joingame: function (target, room, user) {
+
+	pair: function (target, room, user) {
 		if (!room.game) return;
-		room.game.join(user);
+		if (typeof room.game.pair === 'function') room.game.pair(target, user);
 	},
-	leavegame: function (target, room, user) {
+
+	joingame: 'join',
+	join: function (target, room, user) {
 		if (!room.game) return;
-		room.game.leave(user);
+		if (typeof room.game.join === 'function') room.game.join(user);
+	},
+	leavegame: 'leave',
+	leave: function (target, room, user) {
+		if (!room.game) return;
+		if (typeof room.game.leave === 'function') room.game.leave(user);
+	},
+
+	choose: function (target, room, user) {
+		for (room in Rooms.rooms) {
+			let realRoom = Rooms.rooms[room];
+			if (realRoom.game && typeof realRoom.game.choose === 'function') realRoom.game.choose(user, target);
+		}
+	},
+
+	suspect: function (target, room, user) {
+		if (room.name !== user.name) return;
+		let firstComma = target.indexOf(',');
+		if (firstComma === -1) {
+			user.say("The correct syntax is " + Config.commandCharacter + "suspect user, pokemon, room");
+			return;
+		}
+		let userID = target.substr(0, firstComma);
+		target = target.substr(firstComma + 1);
+		if (target.charAt(0) === ' ') {
+			target = target.substr(1);
+		}
+		for (room in Rooms.rooms) {
+			let realRoom = Rooms.rooms[room];
+			if (realRoom.game && typeof realRoom.game.suspect === 'function') realRoom.game.suspect(user, userID, target);
+		}
+	},
+
+	steal: function (target, room, user) {
+		if (!room.game) return;
+		if (typeof room.game.steal === 'function') room.game.steal(target, user);
+	},
+
+	count: function (target, room, user) {
+		if (!room.game) {
+			if (!user.hasRank(room, '+') || Tools.toId(target) !== "start") {
+				return;
+			}
+			Games.createGame("count", room);
+		} else if (typeof room.game.count === 'function') {
+			room.game.count(target, user);
+		}
+	},
+	sit: function (target, room, user) {
+		if (!room.game) return;
+		if (typeof room.game.sit === 'function') room.game.sit(target, user);
 	},
 };
 
