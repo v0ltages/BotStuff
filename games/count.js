@@ -1,6 +1,7 @@
 'use strict';
 
 const name = "Count";
+const description = "Players try to count to the next number without failing! **Command:** ``" + Config.commandCharacter + "count [number]``";
 const id = Tools.toId(name);
 class Count extends Games.Game {
 	constructor(room) {
@@ -11,6 +12,7 @@ class Count extends Games.Game {
 		this.curCount = 0;
 		this.started = true;
 		this.freeJoin = true;
+		this.description = description;
 	}
 
 	count(target, user) {
@@ -26,7 +28,7 @@ class Count extends Games.Game {
 			this.room.say(user.name + " counted incorrectly!");
 			for (let userID in this.players) {
 				let player = this.players[userID];
-				let points = this.points.get(player);
+				let points = this.points.get(player) || 0;
 				if (userID === user.id) {
 					player.say("You counted incorrectly, and so lost " + 25 * (this.curCount - points) + " candies!");
 				} else {
@@ -40,5 +42,5 @@ class Count extends Games.Game {
 
 exports.name = name;
 exports.id = id;
-exports.description = "Count!";
+exports.description = description;
 exports.game = Count;

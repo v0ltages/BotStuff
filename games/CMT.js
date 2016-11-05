@@ -1,6 +1,7 @@
 'use strict';
 
 const name = "Chansey\'s Money Toss";
+const description = "Players try to steal the money before it is taken away! **Command:** ``" + Config.commandCharacter + "steal [username]``";
 const id = Tools.toId(name);
 class Chansey extends Games.Game {
 	constructor(room) {
@@ -12,6 +13,7 @@ class Chansey extends Games.Game {
 		this.curRound = 0;
 		this.numRounds = 10;
 		//this.hasLatejoins = true;
+		this.description = description;
 	}
 
 	onStart() {
@@ -32,7 +34,7 @@ class Chansey extends Games.Game {
 		if (numLeft === 0) {
 			this.tossEgg();
 		} else {
-			if (this.egg && Math.random() <= 0.07) {
+			if (this.egg && Math.random() <= 0.05) {
 				this.room.say("**" + Config.username + " has stolen the money!**");
 				this.egg = null;
 			}
@@ -98,5 +100,5 @@ class Chansey extends Games.Game {
 
 exports.name = name;
 exports.id = id;
-exports.description = "Money!";
+exports.description = description;
 exports.game = Chansey;

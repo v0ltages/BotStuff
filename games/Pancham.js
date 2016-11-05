@@ -1,6 +1,7 @@
 'use strict';
 
 const name = "Pancham's Pairs";
+const description = "Players try to pair the given mons according to ``/dexsearch`` parameters! Valid parameters include tier, generation, color, type, and ability. **Command:** ``" + Config.commandCharacter + "pair mon1, mon2, param``";
 const id = Tools.toId(name);
 const generations = [151, 251, 386, 493, 649, 721];
 const data = {};
@@ -48,6 +49,7 @@ class Pancham extends Games.Game {
 		this.advanced = new Map();
 		this.numAdvanced = 0;
 		this.mons = null;
+		this.description = description;
 	}
 	onStart() {
 		this.nextRound();
@@ -166,22 +168,27 @@ class Pancham extends Games.Game {
 			this.mons.splice(this.mons.indexOf(pair[1]), 1);
 			let hasPair = false;
 			this.numAdvanced++;
-			for (let i = 0; i < this.mons.length; i++) {
+			if (this.numAdvanced === (this.playerCount - 1)) {
+			    clearTimeout(this.timeout);
+			    this.nextRound();
+			} else {
+			    for (let i = 0; i < this.mons.length; i++) {
 				for (let j = i + 1; j < this.mons.length; j++) {
 					if (this.isPair(this.mons[i], this.mons[j], false)) {
 						hasPair = true;
 					}
 				}
-			}
-			if (!hasPair) {
+			    }
+			    if (!hasPair) {
 				this.say("No pairs Left! Moving to next round!");
 				clearTimeout(this.timeout);
 				this.nextRound();
+			    }
 			}
 		}
 	}
 }
 exports.id = id;
 exports.name = name;
-exports.description = "Players try to pair the given mons according to ``/dexsearch`` parameters! Valid parameters include tier, generation, color, type, and ability. **Command:** " + Config.commandCharacter + "pair mon1, mon2, param";
+exports.description = description;
 exports.game = Pancham;

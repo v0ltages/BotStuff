@@ -254,6 +254,21 @@ let commands = {
 		if (!room.game) return;
 		if (typeof room.game.sit === 'function') room.game.sit(target, user);
 	},
+
+	pick: function (target, room, user) {
+		if (!room.game) return;
+		if (typeof room.game.pick === 'function') room.game.pick(target, user);
+	},
+	
+	exclude: function (target, room, user) {
+		if (!room.game) return;
+		if (typeof room.game.exclude === 'function') room.game.exclude(target, user);
+	},
+	guessExclude: 'ge',
+	ge: function (target, room, user) {
+		if (!room.game) return;
+		if (typeof room.game.pick === 'function') room.game.pick(target, user);
+	},
 };
 
 Games.Game = Game;

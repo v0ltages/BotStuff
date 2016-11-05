@@ -14,6 +14,7 @@ function shuffle(array) {
 
 const name = "Magnezone";
 const id = Tools.toId(name);
+const description = "Magnezone's Murder Mystery! Every person chooses a pokemon, after which the bot says which players are killers and which players are regular people. Your goal is to figure out who is which mon based on the params listed. However, for killers the param will always be the opposite of what is stated! Last group surviving (either regular people or killers) wins.";
 const data = {};
 const monForms = {};
 
@@ -55,6 +56,7 @@ class Magnezone extends Games.Game {
 		this.numKillers = null;
 		this.fakeMons = [];
 		this.usedParams = [];
+		this.description = description;
 	}
 
 	onStart() {
@@ -233,5 +235,5 @@ class Magnezone extends Games.Game {
 
 exports.name = name;
 exports.id = id;
-exports.description = "Magnezone's Murder Mystery! Every person chooses a pokemon, after which the bot says which players are killers and which players are regular people. Your goal is to figure out who is which mon based on the params listed. However, for killers the param will always be the opposite of what is stated! Last group surviving (either regular people or killers) wins.";
+exports.description = description;
 exports.game = Magnezone;

@@ -23,6 +23,7 @@ function shuffle(array) {
 	return array;
 }
 const name = "Miltank's Metronome Mayhem";
+const description = "Guess moves that have the opposite effect of the given moves! **Command:** ``" + Config.commandCharacter + "g [answer]``";
 const id = Tools.toId(name);
 const data = {};
 
@@ -45,6 +46,7 @@ class MMM extends Games.Game {
 		for (let i = 0, len = this.information.length; i < len; i++) {
 			this.questions[this.information[i]] = Object.keys(data[this.information[i]]);
 		}
+		this.description = description;
 	}
 
 	onStart() {
@@ -96,7 +98,7 @@ class MMM extends Games.Game {
 			if (bad) continue;
 			this.answers.push(move.name);
 		}
-		this.timeout = setTimeout(() => this.askQuestion(), 10 * 1000);
+		this.timeout = setTimeout(() => this.nextRound(), 10 * 1000);
 	}
 
 	guess(guess, user) {
@@ -123,11 +125,11 @@ class MMM extends Games.Game {
 		}
 		this.say("Correct! " + user.name + " advances to " + points + " point" + (points > 1 ? "s" : "") + ". (Answer" + (this.answers.length > 1 ? "s" : "") + ": __" + this.answers.join(", ") + "__)");
 		this.answers = null;
-		this.timeout = setTimeout(() => this.askQuestion(), 5 * 1000);
+		this.timeout = setTimeout(() => this.nextRound(), 5 * 1000);
 	}
 }
 
 exports.name = name;
 exports.id = id;
-exports.description = "Guess Pokemon based on the given attacks.";
+exports.description = description;
 exports.game = MMM;

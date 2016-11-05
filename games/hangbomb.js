@@ -6,6 +6,7 @@ function replaceAt(str, index, character) {
 
 const name = "Hangman Bomb";
 const id = Tools.toId(name);
+const description = "A variation of hangman in which each player starts with 5 lives - if you guess the answer, you gain a life, but with every wrong guess you lose a life. Last survivor wins! **Command:** ``" + Config.commandCharacter + "g [answer]``";
 const data = {
 	"Pokemon Moves" : [],
 	"Pokemon Items" : [],
@@ -46,6 +47,7 @@ class HangmanBomb extends Games.Game {
 		this.category = null;
 		this.curGuesses = new Map();
 		this.letterRound = 0;
+		this.description = description;
 	}
 
 	onStart() {
@@ -176,5 +178,5 @@ class HangmanBomb extends Games.Game {
 
 exports.name = name;
 exports.id = id;
-exports.description = "A variation of hangman in which each player starts with 5 lives - if you guess the answer, you gain a life, but with every wrong guess you lose a life. Last survivor wins!";
+exports.description = description;
 exports.game = HangmanBomb;

@@ -10,6 +10,7 @@
 'use strict';
 
 const name = "Berry Trivia";
+const description = "Guess berries based on the given descriptions. **Command:** ``" + Config.commandCharacter + "g [answer]``";
 const id = Tools.toId(name);
 const data = {
 	"Pokemon Items": {},
@@ -25,6 +26,7 @@ for (let i in Tools.data.items) {
 class BerryTrivia extends Games.Game {
 	constructor(room) {
 		super(room);
+		this.description = description;
 		this.name = name;
 		this.id = Tools.toId(name);
 		this.answers = null;
@@ -58,7 +60,6 @@ class BerryTrivia extends Games.Game {
 		guess = Tools.toId(guess);
 		let correct = false;
 		for (let i = 0, len = this.answers.length; i < len; i++) {
-			console.log(this.answers[i] + " " + guess);
 			if (Tools.toId(this.answers[i]) === guess) {
 				correct = true;
 				break;
@@ -84,5 +85,5 @@ class BerryTrivia extends Games.Game {
 
 exports.name = name;
 exports.id = id;
-exports.description = "Guess berry answers based on the given descriptions.";
+exports.description = description;
 exports.game = BerryTrivia;

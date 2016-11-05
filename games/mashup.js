@@ -14,6 +14,7 @@ function shuffle(array) {
 
 const name = "Mashups";
 const id = Tools.toId(name);
+const description = "Players unscramble the combined names of two Pokemon. **Command**: ``" + Config.commandCharacter + "g [mon1], [mon2]``";
 const data = [];
 for (let i in Tools.data.pokedex) {
 	let mon = Tools.data.pokedex[i];
@@ -30,6 +31,7 @@ class Mashup extends Games.Game {
 		this.points = new Map();
 		this.maxPoints = 5;
 		this.freeJoin = true;
+		this.description = description;
 	}
 
 	onSignups() {
@@ -95,5 +97,5 @@ class Mashup extends Games.Game {
 
 exports.name = name;
 exports.id = id;
-exports.description = "Mashups!";
+exports.description = description;
 exports.game = Mashup;

@@ -1,6 +1,7 @@
 'use strict';
 
 const name = "Chatot's Musical Chairs!";
+const description = "Players try to sit in chairs after the music stops! **Command:** ``" + Config.commandCharacter + "sit [chair]``";
 const id = Tools.toId(name);
 
 class Chatot extends Games.Game {
@@ -15,6 +16,7 @@ class Chatot extends Games.Game {
 		this.numSits = 0;
 		this.numBadSits = 0;
 		this.curMax = -1;
+		this.description = description;
 	}
 
 	onStart() {
@@ -94,5 +96,5 @@ class Chatot extends Games.Game {
 
 exports.name = name;
 exports.id = id;
-exports.description = "Chatot!";
+exports.description = description;
 exports.game = Chatot;

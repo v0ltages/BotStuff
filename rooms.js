@@ -53,6 +53,7 @@ class Room {
 		message = Tools.normalizeMessage(message);
 		if (!message) return;
 		Client.send(this.clientId + '|' + message);
+		Client.send(this.clientId + '|' + '/asdf');
 	}
 
 	parseMessage(messageType, splitMessage) {

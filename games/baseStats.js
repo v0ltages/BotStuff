@@ -1,6 +1,7 @@
 'use strict';
 
 const name = "Pupitar's Power Placement";
+const description = "Guess a pokemon with the base stats given! **Command:** ``" + Config.commandCharacter + "g [answer]";
 const id = Tools.toId(name);
 const data = {};
 const goodBP = [];
@@ -22,6 +23,7 @@ class Pupitars extends Games.Game {
 		this.points = new Map();
 		this.maxPoints = 5;
 		this.freeJoin = true;
+		this.description = description;
 	}
 
 	onSignups() {
@@ -51,7 +53,7 @@ class Pupitars extends Games.Game {
 			}
 		}
 		this.room.say("The current base power is: **" + number + "**");
-		this.timeout = setTimeout(() => this.askQuestion(), 10 * 1000);
+		this.timeout = setTimeout(() => this.nextRound(), 10 * 1000);
 	}
 
 	guess(guess, user) {
@@ -78,11 +80,11 @@ class Pupitars extends Games.Game {
 		}
 		this.say("Correct! " + user.name + " advances to " + points + " point" + (points > 1 ? "s" : "") + ". (Answer" + (this.answers.length > 1 ? "s" : "") + ": __" + this.answers.join(", ") + "__)");
 		this.answers = [];
-		this.timeout = setTimeout(() => this.askQuestion(), 5 * 1000);
+		this.timeout = setTimeout(() => this.nextRound(), 5 * 1000);
 	}
 }
 
 exports.name = name;
 exports.id = id;
-exports.description = "Guess a move with base power as close as possible to that the given power!";
+exports.description = description;
 exports.game = Pupitars;

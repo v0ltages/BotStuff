@@ -1,6 +1,7 @@
 'use strict';
 
 const name = "Orders";
+const description = "A variation of hangman in which the host starts with a single letter. Instead of players guessing letters, the host will start to add more letters. Players have to be the first to guess the complete words to gain points. **Command:** ``" + Config.commandCharacter + "g [answer]``";
 const id = Tools.toId(name);
 const data = {
 	"Pokemon Moves" : [],
@@ -29,6 +30,7 @@ for (let i in Tools.data.abilities) {
 class Order extends Games.Game {
 	constructor(room) {
 		super(room);
+		this.description = description;
 		this.name = name;
 		this.id = Tools.toId(name);
 		this.answer = null;
@@ -98,5 +100,5 @@ class Order extends Games.Game {
 
 exports.name = name;
 exports.id = id;
-exports.description = "Letters";
+exports.description = description;
 exports.game = Order;

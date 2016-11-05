@@ -22,6 +22,7 @@ function shuffle(array) {
 }
 
 const name = "Chimecho's Stat School";
+const description = "Guess Pokemon with the given base stats! **Command:** ``" + Config.commandCharacter + "g [answer]``";
 const id = Tools.toId(name);
 const data = {};
 
@@ -101,5 +102,5 @@ class CSS extends Games.Game {
 
 exports.name = name;
 exports.id = id;
-exports.description = "Guess Pokemon based on the given Base Stats.";
+exports.description = description;
 exports.game = CSS;
