@@ -17,7 +17,7 @@ class Count extends Games.Game {
 
 	count(target, user) {
 		this.addPlayer(user);
-		let x = Math.floor(target);
+		let x = Math.floor(Tools.toId(target));
 		let player = this.players[user.id];
 		if (x === (this.curCount + 1)) {
 			let points = this.points.get(player) || 0;
@@ -44,3 +44,4 @@ exports.name = name;
 exports.id = id;
 exports.description = description;
 exports.game = Count;
+exports.aliases = [];

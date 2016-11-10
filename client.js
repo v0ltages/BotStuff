@@ -14,7 +14,7 @@ const https = require('https');
 const url = require('url');
 const querystring = require('querystring');
 const MESSAGE_THROTTLE = 600;
-const RETRY_SECONDS = 60;
+const RETRY_SECONDS = 3;
 
 let server = 'play.pokemonshowdown.com';
 if (Config.server && Config.server !== server) {

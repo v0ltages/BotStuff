@@ -104,3 +104,4 @@ exports.name = name;
 exports.id = id;
 exports.description = description;
 exports.game = CSS;
+exports.aliases = ["css"];

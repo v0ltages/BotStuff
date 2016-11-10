@@ -32,9 +32,9 @@ class Chansey extends Games.Game {
 
 	tryToSteal(numLeft) {
 		if (numLeft === 0) {
-			this.tossEgg();
+			this.nextRound();
 		} else {
-			if (this.egg && Math.random() <= 0.05) {
+			if (this.egg && Math.random() <= 0.07) {
 				this.room.say("**" + Config.username + " has stolen the money!**");
 				this.egg = null;
 			}
@@ -102,3 +102,4 @@ exports.name = name;
 exports.id = id;
 exports.description = description;
 exports.game = Chansey;
+exports.aliases = ["moneytoss", "cmt"];

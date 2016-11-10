@@ -1,6 +1,7 @@
 'use strict';
 
 exports.BattleCharacters = [
+	"Ash",
 	"Red",
 "Blue",
 "Professor Oak",

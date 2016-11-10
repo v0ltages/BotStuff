@@ -1,6 +1,6 @@
 'use strict';
 
-const name = "50 Sheep";
+const name = "50 Mareep";
 const description = "Players try to shepherd back the sheep! **Command:** ``" + Config.commandCharacter + "pick [station]``";
 const id = Tools.toId(name);
 
@@ -92,8 +92,8 @@ class Sheep extends Games.Game {
 			let curID = this.order[0];
 			this.curPlayer = this.players[curID];
 			this.order.splice(0, 1);
-			this.room.say("It is now " + this.curPlayer.name + "'s turn to choose a station!");
-			this.room.timeout = setTimeout(() => this.nextPlayer(), 15 * 1000);
+			this.say("It is now " + this.curPlayer.name + "'s turn to choose a station!");
+			this.timeout = setTimeout(() => this.nextPlayer(), 15 * 1000);
 		}
 	}
 
@@ -126,3 +126,4 @@ exports.id = id;
 exports.name = name;
 exports.description = description;
 exports.game = Sheep;
+exports.aliases = ["sheep"];

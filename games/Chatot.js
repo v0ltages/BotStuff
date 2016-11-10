@@ -98,3 +98,4 @@ exports.name = name;
 exports.id = id;
 exports.description = description;
 exports.game = Chatot;
+exports.aliases = ["cmc"];

@@ -69,6 +69,18 @@ class Tools {
 		if (text.length > 300) text = text.substr(0, 297) + "...";
 		return text;
 	}
+
+	shuffle(array) {
+		let currentIndex = array.length, temporaryValue, randomIndex;
+		while (0 !== currentIndex) {
+			randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex -= 1;
+			temporaryValue = array[currentIndex];
+			array[currentIndex] = array[randomIndex];
+			array[randomIndex] = temporaryValue;
+		}
+		return array;
+	}
 }
 
 let tools = new Tools();

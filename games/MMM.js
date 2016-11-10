@@ -30,7 +30,7 @@ const data = {};
 for (let i in Tools.data.moves) {
 	let move = Tools.data.moves[i];
 	if (!move.boosts || !move.name) continue;
-	if (move.name === "Hone Claws" || move.name === "Double Team" || move.name === "Coil" || move.name === "Flash" || move.name === "Kinesis" || move.name === "Dragon Dance" || move.name === "Quiver Dance" || move.name === "Geomancy" || move.name === "Shell Smash" || move.name === "Curse" || move.name === "Aromatic Mist" || move.name === "Charge" || move.name === "Cosmic Power" || move.name === "Defend Order" || move.name === "Magnetic Flux" || move.name === "Silver Wind" || move.name === "Calm Mind" || move.name === "Stockpile" || move.name === "Flower Shield" || move.name === "Rototiller" || move.name === "Shift Gear" || move.name === "Tail Glow" || move.name === "Cotton Guard" || move.name === "Belly Drum") continue;
+	if (move.name === "Memento" || move.name === "Confide" || move.name === "Hone Claws" || move.name === "Double Team" || move.name === "Coil" || move.name === "Flash" || move.name === "Kinesis" || move.name === "Dragon Dance" || move.name === "Quiver Dance" || move.name === "Geomancy" || move.name === "Shell Smash" || move.name === "Curse" || move.name === "Aromatic Mist" || move.name === "Charge" || move.name === "Cosmic Power" || move.name === "Defend Order" || move.name === "Magnetic Flux" || move.name === "Silver Wind" || move.name === "Calm Mind" || move.name === "Stockpile" || move.name === "Flower Shield" || move.name === "Rototiller" || move.name === "Shift Gear" || move.name === "Tail Glow" || move.name === "Cotton Guard" || move.name === "Belly Drum") continue;
 	data[i] = move;
 }
 
@@ -43,17 +43,18 @@ class MMM extends Games.Game {
 		this.maxPoints = 5;
 		this.information = Object.keys(data);
 		this.questions = [];
+		this.description = description;
 		for (let i = 0, len = this.information.length; i < len; i++) {
 			this.questions[this.information[i]] = Object.keys(data[this.information[i]]);
 		}
-		this.description = description;
+		this.freeJoin = true;
 	}
 
-	onStart() {
-		this.askQuestion();
+	onSignups() {
+		this.timeout = setTimeout(() => this.nextRound(), 10 * 1000);
 	}
 
-	askQuestion() {
+	onNextRound() {
 		if (this.answers) {
 			let answers = this.answers.length;
 			this.say("Time's up! The answer" + (answers > 1 ? "s were" : " was") + " __" + this.answers.join(", ") + "__");
@@ -71,8 +72,8 @@ class MMM extends Games.Game {
 			if (i === "accuracy") {let acc1 = "Accuracy"; array2.push(acc1);}
 			if (i === "evasion") {let eva1 = "Evasion"; array2.push(eva1);}
 		}
-		if (array1.length === 1) this.say("Miltank randomly selected **" + question.name + "!**" + (question.target === "self" ? " Its " : " Your ") + array2[0] + " was " + (question.target === "self" ? "raised" : "lowered") + " by " + (array1[0] === 1 || array1[0] === -1 ? "1 stage!" : "2 stages!"));
-		if (array1.length > 1) this.say("Miltank randomly selected **" + question.name + "!**" + (question.target === "self" ? " Its " : " Your ") + array2[0] + " and " + array2[1] + " was " + (question.target === "self" ? "raised" : "lowered") + " by **" + (array1[0] === array1[1] ? "1** stage!" : array1[0] + "** / ** " + array1[1] + " stages!"));
+		if (array1.length === 1) this.say("Miltank randomly selected **" + question.name + "!**");// + (question.target === "self" ? " Its " : " Your ") + array2[0] + " was " + (question.target === "self" ? "raised" : "lowered") + " by " + (array1[0] === 1 || array1[0] === -1 ? "1 stage!" : "2 stages!"));
+		if (array1.length > 1) this.say("Miltank randomly selected **" + question.name + "!**");// + (question.target === "self" ? " Its " : " Your ") + array2[0] + " and " + array2[1] + " was " + (question.target === "self" ? "raised" : "lowered") + " by **" + (array1[0] === array1[1] ? "1** stage!" : array1[0] + "** / ** " + array1[1] + " stages!"));
 		for (let i in data) {
 			let move = data[i];
 			let booster = move.boosts;
@@ -133,3 +134,4 @@ exports.name = name;
 exports.id = id;
 exports.description = description;
 exports.game = MMM;
+exports.aliases = [];

@@ -1,13 +1,17 @@
 'use strict';
 
-const name = "Orders";
-const description = "A variation of hangman in which the host starts with a single letter. Instead of players guessing letters, the host will start to add more letters. Players have to be the first to guess the complete words to gain points. **Command:** ``" + Config.commandCharacter + "g [answer]``";
+const name = 'Anagrams';
 const id = Tools.toId(name);
+const description = 'Players try to guess the scrambled words! **Command:** ``' + Config.commandCharacter + 'g [answer]``';
+
 const data = {
 	"Pokemon Moves" : [],
 	"Pokemon Items" : [],
 	"Pokemon Abilities": [],
 };
+
+data["Pokemon Characters"] = Tools.data.characters;
+data["Pokemon Locations"] = Tools.data.locations;
 
 for (let i in Tools.data.moves) {
 	let move = Tools.data.moves[i];
@@ -27,55 +31,38 @@ for (let i in Tools.data.abilities) {
 	data["Pokemon Abilities"].push(ability.name);
 }
 
-class Order extends Games.Game {
+class Anagrams extends Games.Game {
 	constructor(room) {
 		super(room);
-		this.description = description;
+		this.id = id;
 		this.name = name;
-		this.id = Tools.toId(name);
+		this.description = description;
+		this.freeJoin = true;
+		this.category = null;
 		this.answer = null;
 		this.points = new Map();
-		this.maxPoints = 5;
-		this.categories = Object.keys(data);
-		this.locations = [];
-		this.category = null;
-		this.freeJoin = true;
+		this.categories = Object.keys(data)
+		this.maxPoints = 100;
 	}
 
 	onSignups() {
 		this.timeout = setTimeout(() => this.nextRound(), 10 * 1000);
 	}
 
-	nextLetter() {
-		if (this.locations.length === (this.answer.length - 1)) {
-			this.say("All letters have been revealed! The answer was " + this.answer);
-			this.answer = null;
-			this.timeout = setTimeout(() => this.askQuestion(), 5 * 1000);
-		} else {
-			let other = [];
-			for (let i = 0; i < this.answer.length; i++) {
-				if (this.locations.indexOf(i) === -1) {
-					other.push(i);
-				}
-			}
-			let value = Math.floor(Math.random() * other.length);
-			this.locations.push(other[value]);
-			this.locations.sort(function (a, b) {return a - b;});
-			let str = "";
-			for (let i = 0; i < this.locations.length; i++) {
-				str += this.answer[this.locations[i]];
-			}
-			this.room.say("**" + this.category + "**: " + str.toUpperCase());
-			this.timeout = setTimeout(() => this.nextLetter(), 5 * 1000);
-		}
-	}
-
 	onNextRound() {
+		if (this.answer) {
+			this.say("Time's up! The answer was: __" + this.answer + "__");
+		}
 		this.category = this.categories[Math.floor(Math.random() * this.categories.length)];
 		let x = Math.floor(Math.random() * data[this.category].length);
 		this.answer = data[this.category][x];
-		this.locations = [];
-		this.nextLetter();
+		let chars = [], idAns = Tools.toId(this.answer);
+		for (let i = 0, len = idAns.length; i < len; i++) {
+			chars.push(idAns.charAt(i));
+		}
+		chars = Tools.shuffle(chars);
+		this.say("**[" + this.category + "]** __" + chars.join(", ") + "__");
+		this.timeout = setTimeout(() => this.nextRound(), 10 * 1000);
 	}
 
 	guess(guess, user) {
@@ -101,5 +88,5 @@ class Order extends Games.Game {
 exports.name = name;
 exports.id = id;
 exports.description = description;
-exports.game = Order;
-exports.aliases = [];
+exports.game = Anagrams;
+exports.aliases = ['anags'];

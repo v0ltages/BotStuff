@@ -237,3 +237,4 @@ exports.name = name;
 exports.id = id;
 exports.description = description;
 exports.game = Magnezone;
+exports.aliases = ["mmm"];

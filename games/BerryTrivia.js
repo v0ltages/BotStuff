@@ -87,3 +87,4 @@ exports.name = name;
 exports.id = id;
 exports.description = description;
 exports.game = BerryTrivia;
+exports.aliases = [];

@@ -99,3 +99,4 @@ exports.name = name;
 exports.id = id;
 exports.description = description;
 exports.game = Mashup;
+exports.aliases = [];

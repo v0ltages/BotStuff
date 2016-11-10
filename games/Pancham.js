@@ -83,7 +83,8 @@ class Pancham extends Games.Game {
 			}
 		}
 		if (this.playerCount === 1) {
-			this.room.say("The winner is " + this.players[Object.keys(this.players)[0]].name + "!");
+			this.timeout = setTimeout(() => this.nextRound(), 5 * 1000);
+			this.room.say("**Winner:** " + this.players[Object.keys(this.players)[0]].name);
 			this.end();
 			return;
 		} else if (this.playerCount === 0) {
@@ -172,17 +173,17 @@ class Pancham extends Games.Game {
 			    clearTimeout(this.timeout);
 			    this.nextRound();
 			} else {
-			    for (let i = 0; i < this.mons.length; i++) {
-				for (let j = i + 1; j < this.mons.length; j++) {
-					if (this.isPair(this.mons[i], this.mons[j], false)) {
-						hasPair = true;
+				for (let i = 0; i < this.mons.length; i++) {
+					for (let j = i + 1; j < this.mons.length; j++) {
+						if (this.isPair(this.mons[i], this.mons[j], false)) {
+							hasPair = true;
+						}
 					}
 				}
-			    }
-			    if (!hasPair) {
-				this.say("No pairs Left! Moving to next round!");
-				clearTimeout(this.timeout);
-				this.nextRound();
+				if (!hasPair) {
+					this.say("No pairs Left! Moving to next round!");
+					clearTimeout(this.timeout);
+					this.nextRound();
 			    }
 			}
 		}
@@ -191,4 +192,5 @@ class Pancham extends Games.Game {
 exports.id = id;
 exports.name = name;
 exports.description = description;
+exports.aliases = ["pairs"];
 exports.game = Pancham;

@@ -32,10 +32,15 @@ class Game {
 		this.started = false;
 		this.ended = false;
 		this.freeJoin = false;
+		this.playerCap = -1;
 	}
 
 	say(message) {
 		this.room.say(message);
+	}
+
+	html(message) {
+		this.room.html(message);
 	}
 
 	signups() {
@@ -49,6 +54,27 @@ class Game {
 		if (this.started) return;
 		this.started = true;
 		if (typeof this.onStart === 'function') this.onStart();
+	}
+
+	autostart(target) {
+		let x = Math.floor(target);
+		if (!x || x >= 120 || (x < 10 && x > 2) || x <= 0) return;
+		if (x === 1) x = 60;
+		let minutes = Math.floor(x / 60);
+		let seconds = x % 60;
+		this.say("The game will automatically start in " + (minutes > 0 ? "1 minute, " : "") + seconds + " seconds.");
+		this.timeout = setTimeout(() => this.start(), x * 1000);
+	}
+
+	cap(target) {
+		let x = Math.floor(target);
+		if (!x || x < 2) return;
+		this.playerCap = x;
+		if (this.playerCount >= x) {
+			this.start();
+		} else {
+			this.say("The game will automatically start with " + x + " players!");
+		}
 	}
 
 	end() {
@@ -78,6 +104,9 @@ class Game {
 		let player = new Player(user);
 		this.players[user.id] = player;
 		this.playerCount++;
+		if (this.playerCount === this.playerCap) {
+			this.start();
+		}
 		return player;
 	}
 
@@ -153,10 +182,45 @@ class Plugin {
 			if (file.game && file.name && file.id) this.games[file.id] = file;
 		}
 	}
-
+	
+	sayDescription(game,room) {
+		let id = Tools.toId(game);
+		for (let fileID in this.games) {
+			let game = this.games[fileID];
+			if (game.aliases.indexOf(id) !== -1) {
+				id = fileID;
+				break;
+			} else if (id === fileID) {
+				break;
+			}
+		}
+		if (!(id in this.games)) return;
+		room.say(this.games[id].description);
+	}
+	
 	createGame(game, room) {
+		let games;
+		try {
+			games = fs.readdirSync('./games');
+		} catch (e) {}
+		if (!games) return;
+		for (let i = 0, len = games.length; i < len; i++) {
+			let file = games[i];
+			if (!file.endsWith('.js')) continue;
+			file = require('./../games/' + file);
+			if (file.game && file.name && file.id) this.games[file.id] = file;
+		}
 		if (room.game) return room.say("A game of " + room.game.name + " is already in progress.");
 		let id = Tools.toId(game);
+		for (let fileID in this.games) {
+			let game = this.games[fileID];
+			if (game.aliases.indexOf(id) !== -1) {
+				id = fileID;
+				break;
+			} else if (id === fileID) {
+				break;
+			}
+		}
 		if (!(id in this.games)) return room.say("The game '" + game.trim() + "' was not found.");
 		room.game = new this.games[id].game(room); // eslint-disable-line new-cap
 		room.game.signups();
@@ -259,7 +323,7 @@ let commands = {
 		if (!room.game) return;
 		if (typeof room.game.pick === 'function') room.game.pick(target, user);
 	},
-	
+
 	exclude: function (target, room, user) {
 		if (!room.game) return;
 		if (typeof room.game.exclude === 'function') room.game.exclude(target, user);
@@ -267,7 +331,32 @@ let commands = {
 	guessExclude: 'ge',
 	ge: function (target, room, user) {
 		if (!room.game) return;
-		if (typeof room.game.pick === 'function') room.game.pick(target, user);
+		if (typeof room.game.ge === 'function') room.game.ge(target, user);
+	},
+
+	games: function (target, room, user) {
+		if (!user.isDeveloper() && !user.hasRank(room, '+')) return;
+		let str = [];
+		for (let i in Games.games) {
+			str.push(Games.games[i].name);
+		}
+		room.say("These are the games I currently have: " + str.join(", "));
+	},
+
+	hit: function (target, room, user) {
+		if (!room.game) return;
+		if (typeof room.game.hit === 'function') room.game.hit(target, user);
+	},
+
+	autostart: function (target, room, user) {
+		if (!room.game || !user.hasRank(room, '+')) return;
+		if (typeof room.game.autostart === 'function') room.game.autostart(target);
+	},
+
+	playercap: 'cap',
+	cap: function (target, room, user) {
+		if (!room.game || !user.hasRank(room, '+')) return;
+		if (typeof room.game.cap === 'function') room.game.cap(target);
 	},
 };
 

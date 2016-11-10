@@ -37,8 +37,8 @@ class Context {
 			command = this.command;
 			target = this.target;
 		}
-
 		try {
+			
 			Commands[command].call(this, target, this.room, this.user, this.command, this.time);
 		} catch (e) {
 			let stack = e.stack;
@@ -57,7 +57,7 @@ class CommandParser {
 	parse(message, room, user, time) {
 		message = message.trim();
 		if (message.charAt(0) !== Config.commandCharacter) return;
-
+		
 		message = message.substr(1);
 		let spaceIndex = message.indexOf(' ');
 		let target = '';
@@ -67,6 +67,7 @@ class CommandParser {
 			target = message.substr(spaceIndex + 1);
 		} else {
 			command = message;
+			Games.sayDescription(command, room);
 		}
 		if (!Commands[command]) return;
 		let type = typeof Commands[command];
