@@ -199,6 +199,7 @@ class Plugin {
 	}
 	
 	createGame(game, room) {
+		Object.keys(require.cache).forEach(function(key) { delete require.cache[key] })
 		let games;
 		try {
 			games = fs.readdirSync('./games');

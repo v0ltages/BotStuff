@@ -1,6 +1,6 @@
 'use strict';
 
-const name = "Ponyta's Pinata Party";
+const name = "Ponyta Pinata Party";
 const id = Tools.toId(name);
 const description = "Players try to hit the pinata before it explodes! **Command:** ``" + Config.commandCharacter + "hit``";
 
