@@ -12,7 +12,7 @@ function shuffle(array) {
 	return array;
 }
 
-const name = "Mashups";
+const name = "Mashup";
 const id = Tools.toId(name);
 const description = "Players unscramble the combined names of two Pokemon. **Command**: ``" + Config.commandCharacter + "g [mon1], [mon2]``";
 const data = [];
@@ -22,7 +22,7 @@ for (let i in Tools.data.pokedex) {
 	data.push(mon.species);
 }
 
-class Mashups extends Games.Game {
+class Mashup extends Games.Minigame {
 	constructor(room) {
 		super(room);
 		this.name = name;
@@ -35,12 +35,14 @@ class Mashups extends Games.Game {
 	}
 
 	onSignups() {
-		this.timeout = setTimeout(() => this.nextRound(), 10 * 1000);
+		this.nextRound();
 	}
 
 	onNextRound() {
 		if (this.answers) {
 			this.room.say("Times up! The answer was: __" + this.answers.join(" and ") + "__");
+			this.end();
+			return;
 		}
 		let newDat = shuffle(data);
 		this.answers = [newDat[0], newDat[1]];
@@ -79,24 +81,15 @@ class Mashups extends Games.Game {
 	guess(target, user) {
 		if (!this.answers || !this.correct(target)) return;
 		clearTimeout(this.timeout);
-		if (!(user.id in this.players)) this.addPlayer(user);
-		let player = this.players[user.id];
-		let points = this.points.get(player) || 0;
-		points += 1;
-		this.points.set(player, points);
-		if (points >= this.maxPoints) {
-			this.room.say("Correct! " + user.name + " wins the game! (Answer: __" + this.answers.join(" and ") + "__)");
-			this.end();
-			return;
-		}
-		this.room.say("Correct! " + user.name + " advances to " + points + " point" + (points > 1 ? "s" : "") + ". (Answer: __" + this.answers.join(" and ") + "__)");
-		this.answers = null;
-		this.timeout = setTimeout(() => this.nextRound(), 5 * 1000);
+		this.say("Correct! " + user.name + " has guessed the answer! (Answer: __" + this.answers.join(" and ") + "__)");
+		this.end();
+		return;
 	}
 }
 
 exports.name = name;
 exports.id = id;
 exports.description = description;
-exports.game = Mashups;
+exports.game = Mashup;
 exports.aliases = [];
+exports.minigame = true;

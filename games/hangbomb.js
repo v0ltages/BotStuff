@@ -72,6 +72,14 @@ class HangmanBomb extends Games.Game {
 		let player = this.players[user.id];
 		this.points.delete(player);
 		this.curGuesses.delete(player);
+		delete this.players[user.id];
+		this.playerCount--;
+		if (this.playerCount === 1) {
+			this.room.say("The correct answer was: __" + realAnswer + "__");
+			this.room.say("**Congratulations**! " + this.players[Object.keys(this.players)[0]].name + " has won the game!");
+			this.end();
+			return;
+		}
 	}
 
 	nextLetter() {

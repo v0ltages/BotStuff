@@ -90,3 +90,4 @@ exports.id = id;
 exports.description = description;
 exports.game = Anagrams;
 exports.aliases = ['anags'];
+exports.minigame = false;

@@ -11,7 +11,7 @@
 
 const name = "Politoed's Port Chain";
 const id = Tools.toId(name);
-const description = "Guess a Pokemon that shares 2 - 4 letters with the beginning or end of the given Pokemon.";
+const description = "Guess a Pokemon that shares 2 - 4 letters with the beginning or end of the given Pokemon. **Command:** ``";
 const data = [];
 
 function isPort(mon1, mon2) {
@@ -23,7 +23,7 @@ function isPort(mon1, mon2) {
 	return false;
 }
 
-console.log(isPort("corsola", "lapras"));
+//console.log(isPort("corsola", "lapras"));
 for (let i in Tools.data.pokedex) {
 	let mon1 = Tools.data.pokedex[i];
 	if (!mon1.species || mon1.num < 1) continue;
@@ -32,7 +32,7 @@ for (let i in Tools.data.pokedex) {
 		if (!mon2.species || mon2.num < 0) continue;
 		if (i !== j && isPort(i, j)) {
 			data.push(mon1.species);
-			console.log(mon1.species, mon2.species);
+			//console.log(mon1.species, mon2.species);
 			break;
 		}
 	}
@@ -67,6 +67,8 @@ class PPC extends Games.Game {
 		}
 		else if (this.playerCount === 0) {
 			this.say("No winners this game. Better luck next time!");
+			this.end();
+			return;
 		}
 		else if (this.round === 21) {
 			let goodNames = [];
@@ -99,7 +101,7 @@ class PPC extends Games.Game {
 			this.curPlayer = this.players[userID];
 			this.order.splice(0, 1);
 			this.guessed = false;
-			this.say(this.curPlayer.name + " you're up! The politoed spelled out " + this.curMon);
+			this.say(this.curPlayer.name + " you're up! The Politoed spelled out " + this.curMon);
 			this.timeout = setTimeout(() => this.nextPlayer(), (10 - this.round/20) * 1000);
 		}
 	}

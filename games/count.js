@@ -3,7 +3,7 @@
 const name = "Count";
 const description = "Players try to count to the next number without failing! **Command:** ``" + Config.commandCharacter + "count [number]``";
 const id = Tools.toId(name);
-class Count extends Games.Game {
+class Count extends Games.Minigame {
 	constructor(room) {
 		super(room);
 		this.name = name;

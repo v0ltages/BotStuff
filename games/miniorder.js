@@ -1,6 +1,6 @@
 'use strict';
 
-const name = "Orders";
+const name = "Order";
 const description = "A variation of hangman in which the host starts with a single letter. Instead of players guessing letters, the host will start to add more letters. Players have to be the first to guess the complete words to gain points. **Command:** ``" + Config.commandCharacter + "g [answer]``";
 const id = Tools.toId(name);
 const data = {
@@ -27,32 +27,31 @@ for (let i in Tools.data.abilities) {
 	data["Pokemon Abilities"].push(ability.name);
 }
 
-class Orders extends Games.Game {
+class Order extends Games.Minigame {
 	constructor(room) {
 		super(room);
 		this.description = description;
 		this.name = name;
 		this.id = Tools.toId(name);
 		this.answer = null;
-		this.points = new Map();
-		this.maxPoints = 5;
 		this.categories = Object.keys(data);
 		this.locations = [];
 		this.category = null;
-		this.freeJoin = true;
 	}
-
+	
 	onSignups() {
-		this.timeout = setTimeout(() => this.nextRound(), 10 * 1000);
+		this.nextRound();
 	}
 
 	nextLetter() {
 		if (this.locations.length === (this.answer.length - 1)) {
 			this.say("All letters have been revealed! The answer was " + this.answer);
-			this.answer = null;
-			this.timeout = setTimeout(() => this.nextRound(), 5 * 1000);
+			this.end();
+			return;
 		} else {
 			let other = [];
+			let realAnswer = this.answer;
+			this.answer = Tools.toId(this.answer);
 			for (let i = 0; i < this.answer.length; i++) {
 				if (this.locations.indexOf(i) === -1) {
 					other.push(i);
@@ -62,10 +61,12 @@ class Orders extends Games.Game {
 			this.locations.push(other[value]);
 			this.locations.sort(function (a, b) {return a - b;});
 			let str = "";
+			
 			for (let i = 0; i < this.locations.length; i++) {
 				str += this.answer[this.locations[i]];
 			}
-			this.room.say("**" + this.category + "**: " + str.toUpperCase());
+			this.room.say("**" + str + "**");
+			this.answer = realAnswer;
 			this.timeout = setTimeout(() => this.nextLetter(), 5 * 1000);
 		}
 	}
@@ -75,32 +76,25 @@ class Orders extends Games.Game {
 		let x = Math.floor(Math.random() * data[this.category].length);
 		this.answer = data[this.category][x];
 		this.locations = [];
+		this.say("The chosen category is **" + this.category + "**");
 		this.nextLetter();
 	}
 
 	guess(guess, user) {
+		console.log(this.timeout);
 		guess = Tools.toId(guess);
 		if (!this.answer || guess !== Tools.toId(this.answer)) return;
 		clearTimeout(this.timeout);
-		if (!(user.id in this.players)) this.addPlayer(user);
-		let player = this.players[user.id];
-		let points = this.points.get(player) || 0;
-		points += 1;
-		this.points.set(player, points);
-		if (points >= this.maxPoints) {
-			this.room.say("Correct! " + user.name + " wins the game! (Answer: __" + this.answer + "__)");
-			this.end();
-			return;
-		}
-		this.room.say("Correct! " + user.name + " advances to " + points + " point" + (points > 1 ? "s" : "") + ". (Answer: __" + this.answer + "__)");
-		this.answer = null;
-		this.timeout = setTimeout(() => this.nextRound(), 5 * 1000);
+		this.say("Correct! " + user.name + " has guessed the answer! (__" + this.answer + "__)");
+		this.end();
+		return;
 	}
 }
+
 
 exports.name = name;
 exports.id = id;
 exports.description = description;
-exports.game = Orders;
+exports.game = Order;
 exports.aliases = [];
-exports.minigame = false;
+exports.minigame = true;

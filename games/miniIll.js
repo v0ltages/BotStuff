@@ -1,6 +1,6 @@
 'use strict';
 
-const name = "Inverse Lost Letters!";
+const name = "Inverse Lost Letter!";
 const id = Tools.toId(name);
 const description = "Players guess the missing letters to find the answers! **Command:** ``" + Config.commandCharacter + "g [answer]``";
 
@@ -38,7 +38,7 @@ for (let i in Tools.data.abilities) {
 	data["Pokemon Abilities"].push(ability.name);
 }
 
-class ILL extends Games.Game {
+class IL extends Games.Minigame {
 	constructor(room) {
 		super(room);
 		this.name = name;
@@ -53,7 +53,7 @@ class ILL extends Games.Game {
 	}
 	
 	onSignups() {
-		this.timeout = setTimeout(() => this.nextRound(), 10 * 1000);
+		this.nextRound();
 	}
 	
 	isVowel(ch) {
@@ -75,6 +75,8 @@ class ILL extends Games.Game {
 		if (this.answers) {
 			let answers = this.answers.length;
 			this.say("Time's up! The answer" + (answers > 1 ? "s were:" : " was") + " __" + this.answers.join(", ") + "__");
+			this.end();
+			return;
 		}
 		this.category = "Pokemon";//this.categories[Math.floor(Math.random() * this.categories.length)];
 		let x = Math.floor(Math.random() * data[this.category].length);
@@ -87,6 +89,7 @@ class ILL extends Games.Game {
 		}
 		this.say("**[" + this.category + "]**: __" + answer + "__");
 		this.timeout = setTimeout(() => this.nextRound(), 20 * 1000);
+		console.log(this.timeout);
 	}
 	
 	guess(guess, user) {
@@ -100,25 +103,18 @@ class ILL extends Games.Game {
 			}
 		}
 		if (!correct) return;
+		console.log(this.timeout);
 		clearTimeout(this.timeout);
-		if (!(user.id in this.players)) this.addPlayer(user);
-		let player = this.players[user.id];
-		let points = this.points.get(player) || 0;
-		points += 1;
-		this.points.set(player, points);
-		if (points >= this.maxPoints) {
-			this.say("Correct! " + user.name + " wins the game! (Answer" + (this.answers.length > 1 ? "s" : "") + ": __" + this.answers.join(", ") + "__)");
-			this.end();
-			return;
-		}
-		this.say("Correct! " + user.name + " advances to " + points + " point" + (points > 1 ? "s" : "") + ". (Answer" + (this.answers.length > 1 ? "s" : "") + ": __" + this.answers.join(", ") + "__)");
-		this.answers = null;
-		this.timeout = setTimeout(() => this.nextRound(), 5 * 1000);
+		console.log(this.timeout);
+		this.say("Correct! " + user.name + " has guessed an answer!");
+		this.end();
+		return;
 	}
 }
 
-exports.game = ILL;
+exports.game = IL;
 exports.description = description;
 exports.name = name;
 exports.id = id;
-exports.aliases = ["ill"];
+exports.aliases = ["il"];
+exports.minigame = true;
