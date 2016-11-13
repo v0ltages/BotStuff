@@ -1,0 +1,86 @@
+'use strict';
+
+const name = "Trevenant's Trick Room!";
+const id = Tools.toId(name);
+const description = "Players do .check before the timer runs out! **Command:** ``" + Config.commandCharacter + "check``";
+}
+
+class ILL extends Games.Game {
+	constructor(room) {
+		super(room);
+		this.name = name;
+		this.description = description;
+		this.id = id;
+		this.freeJoin = true;
+		this.answers = null;
+		this.points = new Map();
+		this.maxPoints = 5;
+		this.categories = Object.keys(data);
+		this.category = null;
+	 }
+	
+	onSignups() {
+		this.timeout = setTimeout(() => this.nextRound(), 10 * 1000);
+	}
+	
+	totalTime = totalTime * 1000
+		timer.end[room] = d + totalTime;
+		timer.on[room] = true;
+		Bot.say(by, room, 'You have ' + Tools.getTimeAgo(2 * Date.parse(new Date()) - timer.end[room]))
+		timer.repeat[room] = setTimeout(function() {
+			Bot.say(config.nick, room, 'Time\'s up!');
+			delete timer.on[room]
+		}, totalTime)
+	}
+	
+	convert(str) {
+		let newstr = "";
+		str = Tools.toId(str);
+		for (let i = 0; i <  str.length; i++) {
+			if (this.isVowel(str.charAt(i))) {
+				newstr += str.charAt(i);
+			}
+		}
+		return newstr;
+	}
+	nextRound() {
+		if (this.answers) {
+			let answers = this.answers.length;
+			this.say("Time's up!")
+			}
+		}
+		this.timeout = setTimeout(() => this.nextRound(), 20 * 1000);
+	}
+	
+	guess(guess, user) {
+		if (!this.answers) return;
+		guess = Tools.toId(guess);
+		let correct = false;
+		for (let i = 0, len = this.answers.length; i < len; i++) {
+			if (Tools.toId(this.answers[i]) === guess) {
+				correct = true;
+				break;
+			}
+		}
+		if (!correct) return;
+		clearTimeout(this.timeout);
+		if (!(user.id in this.players)) this.addPlayer(user);
+		let player = this.players[user.id];
+		let points = this.points.get(player) || 0;
+		points += 1;
+		this.points.set(player, points);
+		if (points >= this.maxPoints) {
+			this.say("Correct! " + user.name + " wins the game!");
+			this.end();
+			return;
+		}
+		this.say("Well done! " + user.name + " advances to " + points + " point" + (points > 1 ? "s" : "") + ". 
+		this.timeout = setTimeout(() => this.nextRound(), 5 * 1000);
+	}
+}
+
+exports.game = ttr;
+exports.description = description;
+exports.name = name;
+exports.id = id;
+exports.aliases = ["ttr"];
