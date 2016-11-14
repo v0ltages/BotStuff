@@ -1,0 +1,32 @@
+
+-'use strict';
+-
+-exports.Letters = [
+-	"/hangman create A",
+-	"/hangman create B",
+-"/hangman create C",
+-"/hangman create D",
+-"/hangman create E",
+-"/hangman create F",
+-"/hangman create G",
+-"/hangman create H",
+-"/hangman create I",
+-"/hangman create J",
+-"/hangman create K",
+-"/hangman create L",
+-"/hangman create M",
+-"/hangman create N",
+-"/hangman create O",
+-"/hangman create P",
+-"/hangman create Q",
+-"/hangman create R",
+-"/hangman create S",
+-"/hangman create T",
+-"/hangman create U",
+-"/hangman create V",
+-"/hangman create W",
+-"/hangman create X",
+-"/hangman create Y",
+-"/hangman create Z",
+-
+-]
